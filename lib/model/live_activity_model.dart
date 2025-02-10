@@ -2,16 +2,19 @@
 class LiveActivityModel {
   int stage;
   int minutesToDelivery;
+  int stagesCount;
 
   LiveActivityModel({
     required this.stage,
     required this.minutesToDelivery,
+    required this.stagesCount,
   });
 
   factory LiveActivityModel.fromJson(Map<String, dynamic> json) {
     return LiveActivityModel(
       stage: json['stage'] as int,
       minutesToDelivery: json['minutesToDelivery'] as int,
+      stagesCount: json['stagesCount'] as int,
     );
   }
 
@@ -19,6 +22,7 @@ class LiveActivityModel {
     return {
       'stage': stage,
       'minutesToDelivery': minutesToDelivery,
+      'stagesCount': stagesCount,
     };
   }
 }

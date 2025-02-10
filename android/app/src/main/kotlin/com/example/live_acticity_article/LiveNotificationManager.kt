@@ -104,33 +104,34 @@ class LiveActivityManager(private val context: Context) {
 
 
     // Функция для отображения уведомления первой стадии
-    fun showNotification()  {
+    fun showNotification(stage: Int, stagesCount: Int)  {
         val notification = onFirstNotification()
         
         remoteViews.setTextViewText(R.id.order_status, "Your order has been processed and will be collected soon")
-
-        remoteViews.setImageViewResource(R.id.image_stage, R.drawable.stage1)
-
+        remoteViews.setTextViewText(R.id.stage_status, "Stage status $stage/$stagesCount")
 
         notificationManager.notify(notificationId, notification)
     }
 
     // Функция для обновления и отображения уведомления второй и третьей стадий
-    fun updateNotification(minutesToDelivery: Int, stage: Int) {
+    fun updateNotification(minutesToDelivery: Int, stage: Int, stagesCount: Int) {
         val minuteString = if (minutesToDelivery > 1) "minutes" else "minute"
         
         when (stage) {
             2 -> {
                 remoteViews.setTextViewText(R.id.order_status, "Your order is being assembled and will be shipped to you soon")
                 remoteViews.setImageViewResource(R.id.image_stage, R.drawable.stage2)
+
             }
             3 -> {
                 remoteViews.setTextViewText(R.id.order_status, "Your order is on its way and will be delivered in $minutesToDelivery $minuteString")
                 remoteViews.setImageViewResource(R.id.image_stage, R.drawable.stage3)
             }
-            
         }
-    
+        remoteViews.setTextViewText(R.id.stage_status, "Stage status $stage/$stagesCount")
+
+        
+
         val notification: Notification? = when (stage) {
             2 -> {
                 onGoingNotification()
@@ -151,10 +152,11 @@ class LiveActivityManager(private val context: Context) {
     }
 
     // Функция для отображения уведомления четвертой стадии
-    fun finishDeliveryNotification() {
+    fun finishDeliveryNotification(stage: Int, stagesCount: Int) {
         val notification = onFinishNotification()
         remoteViews.setTextViewText(R.id.order_status, "Your order is delivered. Enjoy your purchase!")
         remoteViews.setImageViewResource(R.id.image_stage,R.drawable.stage4)
+        remoteViews.setTextViewText(R.id.stage_status, "Stage status $stage/$stagesCount")
         notificationManager.notify(notificationId, notification)
     }
 

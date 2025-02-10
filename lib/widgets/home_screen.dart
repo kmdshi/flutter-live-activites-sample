@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:live_acticity_article/model/live_activity_model.dart';
-import 'package:live_acticity_article/service/live_activity_android_service.dart';
+import 'package:live_acticity_article/service/live_activity_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   LiveActivityAndroidService liveActivityService = LiveActivityAndroidService();
 
   LiveActivityModel liveActivityModel =
-      LiveActivityModel(stage: 1, minutesToDelivery: 10);
+      LiveActivityModel(stage: 1, minutesToDelivery: 10, stagesCount: 4);
 
   Timer? timer;
 
@@ -40,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 setState(() {
-                  liveActivityModel =
-                      LiveActivityModel(stage: 0, minutesToDelivery: 10);
+                  liveActivityModel = LiveActivityModel(
+                      stage: 1, minutesToDelivery: 10, stagesCount: 4);
                 });
                 await liveActivityService
                     .startNotifications(data: liveActivityModel)
@@ -76,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       if (liveActivityModel.stage == 4) {
-        await liveActivityService.finishDeliveryNotification().then((value) {
+        await liveActivityService
+            .finishNotifications(data: liveActivityModel)
+            .then((value) {
           timer?.cancel();
         });
       }
@@ -86,8 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void endNotifications() {
     timer?.cancel();
     setState(() {
-      liveActivityModel = LiveActivityModel(stage: 0, minutesToDelivery: 10);
+      liveActivityModel =
+          LiveActivityModel(stage: 1, minutesToDelivery: 10, stagesCount: 4);
     });
-    liveActivityService.endNotifications();
+    liveActivityService.endNotifications(data: liveActivityModel);
   }
 }

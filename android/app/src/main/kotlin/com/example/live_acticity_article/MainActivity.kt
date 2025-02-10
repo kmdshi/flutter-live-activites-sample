@@ -23,29 +23,42 @@ class MainActivity: FlutterActivity() {
       MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
         call, result ->
         if (call.method == "startDelivery") {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                LiveActivityManager(this@MainActivity).showNotification()
+            val args = call.arguments<Map<String, Any>>()
+            val stage = args?.get("stage") as? Int
+            val stagesCount = args?.get("stagesCount") as? Int
+
+            
+            if (stage != null && stagesCount != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    LiveActivityManager(this@MainActivity).showNotification(stage, stagesCount)
+                }
             }
             result.success("Notification displayed")
         } else if (call.method == "updateDeliveryStatus") {
             val args = call.arguments<Map<String, Any>>()
             val minutes = args?.get("minutesToDelivery") as? Int
-            val newStage = args?.get("stage") as? Int
+            val stage = args?.get("stage") as? Int
+            val stagesCount = args?.get("stagesCount") as? Int
 
-
-            if (minutes != null && newStage != null){
+            if (minutes != null && stage != null && stagesCount != null){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    LiveActivityManager(this@MainActivity).updateNotification(minutesToDelivery = minutes, stage = newStage)
+                    LiveActivityManager(this@MainActivity).updateNotification(minutes, stage, stagesCount)
                 }
             }
             result.success("Notification updated")
         } else if (call.method == "finishDelivery") {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                LiveActivityManager(this@MainActivity)
-                    .finishDeliveryNotification()
+            val args = call.arguments<Map<String, Any>>()
+            val stage = args?.get("stage") as? Int
+            val stagesCount = args?.get("stagesCount") as? Int
+
+            if (stage != null && stagesCount != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    LiveActivityManager(this@MainActivity)
+                        .finishDeliveryNotification(stage, stagesCount)
+                }
             }
             result.success("Notification delivered")
-        } else if (call.method == "endNotifications") {
+        } else if (call.method == "endNotifications") { 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 LiveActivityManager(this@MainActivity)
                     .endNotification()

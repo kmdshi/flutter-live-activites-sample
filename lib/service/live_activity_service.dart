@@ -15,21 +15,21 @@ class LiveActivityAndroidService {
 
   Future<void> updateNotifications({required LiveActivityModel data}) async {
     try {
-     await _method.invokeMethod("updateDeliveryStatus", data.toJson());
+      await _method.invokeMethod("updateDeliveryStatus", data.toJson());
     } on PlatformException catch (e) {
       throw PlatformException(code: e.code);
     }
   }
 
-  Future<void> finishDeliveryNotification() async {
+  Future<void> finishNotifications({required LiveActivityModel data}) async {
     try {
-      await _method.invokeMethod("finishDelivery");
+      await _method.invokeMethod("finishDelivery", data.toJson());
     } on PlatformException catch (e) {
       throw PlatformException(code: e.code);
     }
   }
 
-  Future<void> endNotifications() async {
+  Future<void> endNotifications({required LiveActivityModel data}) async {
     try {
       await _method.invokeMethod("endNotifications");
     } on PlatformException catch (e) {
